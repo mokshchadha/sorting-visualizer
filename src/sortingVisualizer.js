@@ -27,7 +27,11 @@ export default class SortingVisualizer extends React.Component {
   reset() {
     this.setState({
       array: new Array(30).fill(0).map((e) => parseInt(Math.random() * 550)),
+      sorted: false,
+      idx1: 0,
+      idx2: 1
     });
+    //console.log(this.state.sorted);
   }
 
   async bubbleSort() {
@@ -41,11 +45,32 @@ export default class SortingVisualizer extends React.Component {
         if (auxillaryArray[j] > auxillaryArray[j + 1]) {
           this.setState({ idx2: j });
           this.swap(auxillaryArray, j, j + 1);
-          await this.sleep(500);
+          await this.sleep(100);
           this.setState({ array: auxillaryArray });
         }
       }
     }
+    this.setState({ sorted: true });
+  }
+
+  async insertionSort(){
+    const {array} = this.state;
+    const n = array.length;
+    let i, j, key;
+    for (i = 1; i < n; i++)
+    { 
+      this.setState({ idx1: i });
+      key = array[i]; 
+      j = i - 1; 
+      while (j >= 0 && array[j] > key)
+      { 
+        this.setState({ idx2: j });
+        array[j + 1] = array[j]; 
+        j = j - 1;
+        await this.sleep(100); 
+      } 
+      array[j + 1] = key; 
+    } 
     this.setState({ sorted: true });
   }
 
@@ -79,6 +104,7 @@ export default class SortingVisualizer extends React.Component {
         </div>
         <div>
           <button onClick={() => this.bubbleSort()}>bubble sort</button>
+          <button onClick={() => this.insertionSort()}>insertion sort</button>
           <button onClick={() => this.reset()}>reset</button>
         </div>
       </div>
