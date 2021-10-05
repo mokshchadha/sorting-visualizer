@@ -26,10 +26,10 @@ export default class SortingVisualizer extends React.Component {
 
   reset() {
     this.setState({
-      array: new Array(30).fill(0).map((e) => parseInt(Math.random() * 550)),
+      array: new Array(50).fill(0).map((e) => parseInt(Math.random() * 550)),
       sorted: false,
       idx1: 0,
-      idx2: 1
+      idx2: 1,
     });
     //console.log(this.state.sorted);
   }
@@ -45,7 +45,7 @@ export default class SortingVisualizer extends React.Component {
         if (auxillaryArray[j] > auxillaryArray[j + 1]) {
           this.setState({ idx2: j });
           this.swap(auxillaryArray, j, j + 1);
-          await this.sleep(100);
+          await this.sleep(50);
           this.setState({ array: auxillaryArray });
         }
       }
@@ -76,7 +76,11 @@ export default class SortingVisualizer extends React.Component {
 
   getColor(i) {
     const { idx1, idx2, sorted } = this.state;
-    return sorted ? "green" : [idx1, idx2].includes(i) ? "#c62828" : "#90caf9 ";
+    return sorted
+      ? "#ccff90"
+      : [idx1, idx2].includes(i)
+      ? "#c62828"
+      : "#90caf9 ";
   }
 
   render() {
