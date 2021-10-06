@@ -1,11 +1,19 @@
 import React from "react";
 
+const buttonStyl = (sortRunning) => ({
+  margin: "2px",
+  border: "solid #b3e5fc ",
+  backgroundColor: sortRunning ? "#e0e0e0" : "#4eb5f1",
+  color: sortRunning ? "#424242" : "#ffffff",
+});
+
 export default class SortingVisualizer extends React.Component {
   state = {
     array: [],
     idx1: 0,
     idx2: 1,
     sorted: false,
+    sortRunning: false,
   };
 
   componentDidMount() {
@@ -26,15 +34,17 @@ export default class SortingVisualizer extends React.Component {
 
   reset() {
     this.setState({
-      array: new Array(50).fill(0).map((e) => parseInt(Math.random() * 550)),
+      array: new Array(50)
+        .fill(0)
+        .map((e) => parseInt(Math.random() * 500) + 50),
       sorted: false,
       idx1: 0,
       idx2: 1,
     });
-    //console.log(this.state.sorted);
   }
 
   async bubbleSort() {
+    this.setState({ sortRunning: true });
     const { array } = this.state;
     let auxillaryArray = array;
     let i, j;
@@ -50,28 +60,27 @@ export default class SortingVisualizer extends React.Component {
         }
       }
     }
-    this.setState({ sorted: true });
+    this.setState({ sorted: true, sortRunning: false });
   }
 
-  async insertionSort(){
-    const {array} = this.state;
+  async insertionSort() {
+    this.setState({ sortRunning: true });
+    const { array } = this.state;
     const n = array.length;
     let i, j, key;
-    for (i = 1; i < n; i++)
-    { 
+    for (i = 1; i < n; i++) {
       this.setState({ idx1: i });
-      key = array[i]; 
-      j = i - 1; 
-      while (j >= 0 && array[j] > key)
-      { 
+      key = array[i];
+      j = i - 1;
+      while (j >= 0 && array[j] > key) {
         this.setState({ idx2: j });
-        array[j + 1] = array[j]; 
+        array[j + 1] = array[j];
         j = j - 1;
-        await this.sleep(100); 
-      } 
-      array[j + 1] = key; 
-    } 
-    this.setState({ sorted: true });
+        await this.sleep(100);
+      }
+      array[j + 1] = key;
+    }
+    this.setState({ sorted: true, sortRunning: false });
   }
 
   getColor(i) {
@@ -84,32 +93,71 @@ export default class SortingVisualizer extends React.Component {
   }
 
   render() {
+    const { sortRunning } = this.state;
     return (
-      <div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <div
           style={{
-            transform: "rotate(270deg)",
+            fontFamily: "Times New Roman",
+            fontStyle: "italic",
+            fontWeight: "bold",
           }}
         >
-          {this.state.array.map((e, i) => (
-            <div
-              key={i}
-              style={{
-                width: `${e}px`,
-                backgroundColor: this.getColor(i),
-                margin: "1px",
-              }}
-            >
-              <span style={{ color: this.getColor(i), fontSize: "1px" }}>
-                Aditri is awesome
-              </span>
-            </div>
-          ))}
+          Sorting Algorithm visualizer
         </div>
-        <div>
-          <button onClick={() => this.bubbleSort()}>bubble sort</button>
-          <button onClick={() => this.insertionSort()}>insertion sort</button>
-          <button onClick={() => this.reset()}>reset</button>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <div
+            style={{
+              transform: "rotate(270deg)",
+              margin: "50px",
+            }}
+          >
+            {this.state.array.map((e, i) => (
+              <p
+                key={i}
+                style={{
+                  width: `${e}px`,
+                  backgroundColor: this.getColor(i),
+                  margin: "1px",
+                  height: "5px",
+                }}
+              >
+                <span style={{ color: this.getColor(i), fontSize: "1px" }}>
+                  Aditri is awesome
+                </span>
+              </p>
+            ))}
+          </div>
+          <div>
+            <button
+              style={buttonStyl(sortRunning)}
+              disabled={sortRunning}
+              onClick={() => this.bubbleSort()}
+            >
+              bubble sort
+            </button>
+            <button
+              style={buttonStyl(sortRunning)}
+              disabled={sortRunning}
+              onClick={() => this.insertionSort()}
+            >
+              insertion sort
+            </button>
+            <button
+              style={buttonStyl(sortRunning)}
+              disabled={sortRunning}
+              onClick={() => this.reset()}
+            >
+              reset
+            </button>
+          </div>
         </div>
       </div>
     );
