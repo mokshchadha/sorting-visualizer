@@ -83,6 +83,31 @@ export default class SortingVisualizer extends React.Component {
     this.setState({ sorted: true, sortRunning: false });
   }
 
+  async selectionSort(){
+    this.setState({ sortRunning: true });
+    const { array } = this.state;
+    let auxillaryArray = array;
+    let i, j, minIdx;
+    const n = array.length;
+      for (i = 0; i < n-1; i++)
+      {
+        this.setState({ idx1: i });
+        minIdx = i;
+        for (j = i + 1; j < n; j++){
+          if (auxillaryArray[j] < auxillaryArray[minIdx]){
+            this.setState({ idx2: j });
+            await this.sleep(100);
+            minIdx = j;
+          }
+        }
+        this.swap(auxillaryArray, i, minIdx);
+        this.setState({ array: auxillaryArray });
+      }
+
+    this.setState({ sorted: true, sortRunning: false });
+  }
+
+
   getColor(i) {
     const { idx1, idx2, sorted } = this.state;
     return sorted
@@ -149,6 +174,13 @@ export default class SortingVisualizer extends React.Component {
               onClick={() => this.insertionSort()}
             >
               insertion sort
+            </button>
+            <button
+              style={buttonStyl(sortRunning)}
+              disabled={sortRunning}
+              onClick={() => this.selectionSort()}
+            >
+              selection sort
             </button>
             <button
               style={buttonStyl(sortRunning)}
